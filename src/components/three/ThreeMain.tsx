@@ -10,6 +10,7 @@ const ThreeScene: React.FC = () => {
 
   const handleBoxClick = () => {
     publishMessage("control/box", "Box clicked!");
+    console.log("Box clicked!");
   };
 
   return (

@@ -1,15 +1,15 @@
 import React, { useEffect } from "react";
 import useMqtt from "../../hooks/useMqtt";
+import { DEFAULT_TOPIC } from "../../config/settings";
 
 const Menu: React.FC = () => {
   const { isConnected, messages, subscribeToTopic } = useMqtt();
-  const topic = "my/topic";
 
   // Menu에서만 구독
   useEffect(() => {
     if (isConnected) {
-      console.log("subscribing to topic ", topic);
-      subscribeToTopic(topic);
+      console.log("subscribing to topic ", DEFAULT_TOPIC);
+      subscribeToTopic(DEFAULT_TOPIC);
     }
   }, [subscribeToTopic, isConnected]);
 
