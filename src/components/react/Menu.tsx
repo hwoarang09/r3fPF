@@ -1,25 +1,38 @@
 import React, { useEffect, useState } from "react";
 import useMqtt from "../../hooks/useMqtt";
-import { DEFAULT_TOPIC } from "../../config/settings";
+import { SUB_TOPIC, PUB_TOPIC } from "../../config/settings";
 
 const Menu: React.FC = () => {
   const { isConnected, messages, subscribeToTopic, publishMessage } = useMqtt();
-  const [inputMessage, setInputMessage] = useState("");
-  const [publishTopic, setPublishTopic] = useState(DEFAULT_TOPIC);
+  const [inputMessage, setInputMessage] = useState(
+    JSON.stringify({
+      message: "Hello, World!",
+    })
+  );
+  const [publishTopic, setPublishTopic] = useState(PUB_TOPIC);
 
   // Subscribe only within the Menu component
   useEffect(() => {
     if (isConnected) {
-      console.log("subscribing to topic ", DEFAULT_TOPIC);
-      subscribeToTopic(DEFAULT_TOPIC);
+      console.log("subscribing to topic ", SUB_TOPIC);
+      subscribeToTopic(SUB_TOPIC);
     }
   }, [subscribeToTopic, isConnected]);
 
   // Handle message sending
   const handleSendMessage = () => {
-    if (inputMessage && publishTopic) {
-      publishMessage(publishTopic, inputMessage);
-      setInputMessage(""); // Clear input after sending
+    if (publishTopic) {
+      try {
+        // Parse inputMessage JSON, add timestamp, and stringify
+        const parsedMessage = JSON.parse(inputMessage);
+        parsedMessage.timestamp = new Date().toISOString();
+
+        const messageWithTimestamp = JSON.stringify(parsedMessage);
+        publishMessage(publishTopic, messageWithTimestamp);
+        setInputMessage(""); // Clear input after sending
+      } catch (error) {
+        console.error("Invalid JSON format in inputMessage:", error);
+      }
     }
   };
 

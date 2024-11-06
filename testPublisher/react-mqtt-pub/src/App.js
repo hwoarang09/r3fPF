@@ -1,9 +1,8 @@
-
-import MqttPubscriber from './mqttPub'
+import MqttPubscriber from "./components/MqttPublisher";
 function App() {
   return (
     <div className="App">
-      <MqttPubscriber/>
+      <MqttPubscriber />
     </div>
   );
 }
