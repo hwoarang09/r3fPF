@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import {
   AccordionItem,
   AccordionTrigger,
@@ -10,34 +10,24 @@ import { Message } from "./types";
 interface TopicAccordionItemProps {
   topic: string;
   messages: Message[];
+  containerRef: React.RefObject<HTMLDivElement>; // 바깥 스크롤 컨테이너 ref
 }
 
 const TopicAccordionItem: React.FC<TopicAccordionItemProps> = ({
   topic,
   messages,
+  containerRef,
 }) => {
-  const messageCountRef = useRef(messages.length); // 최신 메시지 개수 추적
-  const countDisplayRef = useRef<HTMLSpanElement | null>(null); // 개수를 보여줄 DOM 요소
-
-  // `messages` 변경 시 메시지 개수 바로 업데이트
-  useEffect(() => {
-    messageCountRef.current = messages.length;
-    if (countDisplayRef.current) {
-      countDisplayRef.current.textContent = `${messageCountRef.current} messages`;
-    }
-  }, [messages.length]);
-
   return (
-    <AccordionItem value={topic} className="focus:outline-none no-underline">
-      <AccordionTrigger className="font-semibold text-lg flex items-center space-x-2 focus:outline-none no-underline">
-        <span>{topic}</span>
-        <span
-          ref={countDisplayRef}
-          className="text-sm text-gray-500 bg-gray-200 px-2 py-0.5 rounded-full"
-        />
+    <AccordionItem value={topic}>
+      <AccordionTrigger>
+        <div className="flex justify-between w-full">
+          <span>{topic}</span>
+          <span className="text-xs text-gray-500">({messages.length})</span>
+        </div>
       </AccordionTrigger>
       <AccordionContent>
-        <MessageList messages={messages} />
+        <MessageList messages={messages} containerRef={containerRef} />
       </AccordionContent>
     </AccordionItem>
   );

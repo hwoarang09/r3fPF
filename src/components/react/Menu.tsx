@@ -6,7 +6,8 @@ const Menu: React.FC = () => {
   const { isConnected, messages, subscribeToTopic, publishMessage } = useMqtt();
   const [inputMessage, setInputMessage] = useState(
     JSON.stringify({
-      message: "Hello, World!",
+      id: "3839",
+      command: "Hanmool",
     })
   );
   const [publishTopic, setPublishTopic] = useState(PUB_TOPIC);
@@ -28,6 +29,7 @@ const Menu: React.FC = () => {
         parsedMessage.timestamp = new Date().toISOString();
 
         const messageWithTimestamp = JSON.stringify(parsedMessage);
+        console.log(messageWithTimestamp);
         publishMessage(publishTopic, messageWithTimestamp);
         setInputMessage(""); // Clear input after sending
       } catch (error) {
