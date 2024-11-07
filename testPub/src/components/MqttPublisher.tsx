@@ -15,7 +15,7 @@ const MqttPublisher: React.FC = () => {
   return (
     <ResizablePanelGroup
       direction="vertical"
-      className="min-h-[980px] max-w h-screen rounded-lg border md:min-w-[450px]"
+      className="min-h-[680px] max-w rounded-lg border md:min-w-[450px]"
     >
       <ResizablePanel defaultSize={75}>
         <ResizablePanelGroup direction="horizontal">
