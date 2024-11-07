@@ -4,7 +4,7 @@ import MqttPublisher from "./components/MqttPublisher";
 const App: React.FC = () => {
   console.log("hi");
   return (
-    <div className="App">
+    <div className="App overflow-hidden">
       <MqttPublisher />
     </div>
   );

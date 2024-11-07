@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Accordion } from "@/components/ui/accordion";
 import TopicAccordionItem from "./TopicAccordionItem";
 import { Message } from "./types";
@@ -12,19 +12,10 @@ interface MessageReceiverProps {
 const MessageReceiver: React.FC<MessageReceiverProps> = ({
   messagesByTopic,
 }) => {
-  console.log(`messagesByTopic: ${JSON.stringify(messagesByTopic, null, 2)}`);
-
-  if (!messagesByTopic || Object.keys(messagesByTopic).length === 0) {
-    return (
-      <div className="flex-1 p-5">
-        <h2 className="text-xl font-bold mb-2">Received Messages</h2>
-        <p className="text-gray-500">No messages received yet.</p>
-      </div>
-    );
-  }
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   return (
-    <div className="flex-1 p-5">
+    <div ref={containerRef} className="flex-1 p-5 overflow-y-auto h-full">
       <h2 className="text-xl font-bold mb-2">Received Messages</h2>
       <Accordion type="single" collapsible>
         {Object.keys(messagesByTopic).map((topic) => (
@@ -32,6 +23,7 @@ const MessageReceiver: React.FC<MessageReceiverProps> = ({
             key={topic}
             topic={topic}
             messages={messagesByTopic[topic]}
+            containerRef={containerRef} // 바깥쪽 스크롤 컨테이너 ref 전달
           />
         ))}
       </Accordion>
