@@ -10,7 +10,10 @@ const SelectedMessagePanel: React.FC = () => {
         <>
           {/* 타임스탬프를 왼쪽 상단에 작은 글씨로 표시 */}
           <span className="text-xs text-gray-500 mb-2">
-            Timestamp: {new Date(selectedMessage.timestamp).toLocaleString()}
+            Timestamp:{" "}
+            {`${new Date(selectedMessage.timestamp).toLocaleString()}.${String(
+              new Date(selectedMessage.timestamp).getMilliseconds()
+            ).padStart(3, "0")}000`}
           </span>
 
           {/* 메시지 내용을 왼쪽 상단부터 작은 글씨로 출력 */}

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import SendMessageForm from "./MessageSender/SendMessageForm";
 interface MessageSenderProps {
   onSend: (message: string) => void;
 }
@@ -22,20 +22,8 @@ const MessageSender: React.FC<MessageSenderProps> = ({ onSend }) => {
 
   return (
     <div className="flex-1 p-5 border-r border-gray-300">
-      <h2 className="text-xl font-bold mb-2">Send Message</h2>
-      <textarea
-        value={command}
-        onChange={(e) => setCommand(e.target.value)}
-        rows={4}
-        className="w-full border border-gray-400 p-2 mb-2"
-        placeholder="Enter message in JSON format"
-      />
-      <button
-        onClick={handleSend}
-        className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-      >
-        Send!
-      </button>
+      <h2 className="text-xl font-bold mb-2">Sender</h2>
+      <SendMessageForm />
     </div>
   );
 };
