@@ -2,7 +2,7 @@
 import React from "react";
 
 interface MessageInputProps {
-  keyList: { [key: string]: string };
+  keyList: { [key: string]: any };
   messageData: { [key: string]: any };
   onChangeMessageData: (key: string, value: any) => void;
 }

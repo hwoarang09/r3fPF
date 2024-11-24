@@ -13,7 +13,13 @@ interface MqttState {
   subscribedTopics: Set<string>;
   connect: () => void;
   disconnect: () => void;
-  publishMessage: (topic: string, message: string) => void;
+  publishMessage: ({
+    topic,
+    message,
+  }: {
+    topic: string;
+    message: string;
+  }) => void;
   subscribeToTopic: (topic: string) => void;
   unsubscribeFromTopic: (topic: string) => void; // 구독 해제 함수
 }
@@ -69,8 +75,9 @@ const useMqttStore = create(
       }
     },
 
-    publishMessage: (topic, message) => {
+    publishMessage: ({ topic, message }) => {
       const { client, isConnected } = get();
+      console.log("publishing message", message, "to topic", topic);
       if (client && isConnected) {
         client.publish(topic, message);
       }

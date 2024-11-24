@@ -5,7 +5,13 @@ import MessageInput from "./MessageInput";
 import topicList from "../../config/topicList";
 
 interface SendMessageFormProps {
-  publishMessage: (topic: string, message: string) => void;
+  publishMessage: ({
+    topic,
+    message,
+  }: {
+    topic: string;
+    message: string;
+  }) => void;
 }
 
 const SendMessageForm: React.FC<SendMessageFormProps> = ({
@@ -22,7 +28,8 @@ const SendMessageForm: React.FC<SendMessageFormProps> = ({
           ...messageData,
           timestamp: new Date().toISOString(),
         });
-        publishMessage(selectedTopic, messageWithTimestamp);
+        console.log({ topic: selectedTopic, message: messageWithTimestamp });
+        publishMessage({ topic: selectedTopic, message: messageWithTimestamp });
       }
     }
   };

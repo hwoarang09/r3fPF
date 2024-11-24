@@ -1,7 +1,5 @@
-// components/SendMessageForm.tsx
 import { useState } from "react";
-import * as React from "react";
-import TopicDropdown from "./TopicDropdown";
+import TopicDropdown from "./TopicDropDown";
 import MessageInput from "./MessageInput";
 import topicList from "../../config/topicConfig";
 import { useMqttStore } from "@store/mqttStore";

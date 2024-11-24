@@ -1,16 +1,18 @@
 import { create } from "zustand";
 import mqtt, { MqttClient } from "mqtt";
 
+const SUB_TOPIC = "#";
+
 interface MqttState {
-  client: MqttClient | null; // MQTT 클라이언트
-  receivedMessages: { [topic: string]: any[] }; // 토픽별 메시지 저장
+  client: MqttClient | null;
+  receivedMessages: { [topic: string]: any[] };
   sendMessage: (params: { topic: string; message: string }) => void;
   setReceivedMessages: (topic: string, message: any) => void;
-  initializeClient: (url: string) => void; // 클라이언트 초기화 함수
+  initializeClient: (url: string) => void;
 }
 
 export const useMqttStore = create<MqttState>((set, get) => ({
-  client: null, // 초기값은 null
+  client: null,
 
   receivedMessages: {},
 
@@ -43,6 +45,15 @@ export const useMqttStore = create<MqttState>((set, get) => ({
 
     client.on("connect", () => {
       console.log("Connected to MQTT broker");
+      if (client.connected) {
+        client.subscribe(SUB_TOPIC, (err) => {
+          if (err) {
+            console.error("Failed to subscribe to topic", err);
+          } else {
+            console.log("Subscribed to topic");
+          }
+        });
+      }
     });
 
     client.on("message", (topic, message) => {

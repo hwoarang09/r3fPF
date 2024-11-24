@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 
-// 커스텀 Hook 정의
 export function useFetchEdges(url) {
   const [edges, setEdges] = useState([]);
   const [radius, setRadius] = useState(null);
@@ -8,12 +7,10 @@ export function useFetchEdges(url) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // 데이터를 fetch로 불러옴
-
     fetch(url)
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          throw new Error("Network Error");
         }
         return response.text();
       })
@@ -23,9 +20,9 @@ export function useFetchEdges(url) {
         let radiusData = null;
 
         lines.forEach((line) => {
-          const elements = line.trim().split(" "); // 공백으로 나누기
+          const elements = line.trim().split(" ");
           if (elements[0] === "radius" && elements.length === 2) {
-            radiusData = 5; // 예시로 설정한 radius 값
+            radiusData = 5;
           }
           if (elements.length >= 4 && elements[0][0] !== "#") {
             edgesData.push({

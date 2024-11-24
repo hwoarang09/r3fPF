@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import mqtt from "mqtt";
-
+import { mqttUrl } from "@config/mqttConfig";
 const SUB_TOPIC = "#";
 
 type Message = {
@@ -27,13 +27,14 @@ const useMqtt = () => {
   useEffect(() => {
     if (clientRef.current) return;
 
-    const client = mqtt.connect("ws://localhost:8083");
+    const client = mqtt.connect(mqttUrl);
 
     client.on("connect", () => {
       console.log("Connected to MQTT broker");
 
       // Check if the client is connected before subscribing
       if (client.connected) {
+        console.log("subscribing to topic", SUB_TOPIC);
         client.subscribe(SUB_TOPIC, (err) => {
           if (err) {
             console.error("Failed to subscribe to topic", err);
