@@ -3,7 +3,9 @@ import useMessageStore from "../store/messageStore";
 
 const SelectedMessagePanel: React.FC = () => {
   const selectedMessage = useMessageStore((state) => state.selectedMessage);
-
+  console.log("zz");
+  if (selectedMessage)
+    console.log(selectedMessage, Object.keys(selectedMessage));
   return (
     <div className="flex flex-col items-start justify-start p-6 border border-gray-300 rounded-lg shadow-md bg-white w-full h-full">
       {selectedMessage ? (

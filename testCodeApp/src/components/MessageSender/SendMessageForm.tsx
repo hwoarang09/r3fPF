@@ -1,7 +1,7 @@
 import { useState } from "react";
 import TopicDropdown from "./TopicDropDown";
 import MessageInput from "./MessageInput";
-import topicList from "../../config/topicConfig";
+import topicList from "@config/topicConfig";
 import { useMqttStore } from "@store/mqttStore";
 
 const SendMessageForm = () => {

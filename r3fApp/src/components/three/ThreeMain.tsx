@@ -3,13 +3,12 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { Perf } from "r3f-perf";
 import Box from "./Box";
-import useMqtt from "../../hooks/useMqtt";
+import { useMqttStore } from "../../store/mqttStore";
 
 const ThreeScene: React.FC = () => {
-  const { publishMessage } = useMqtt();
-
+  const { sendMessage } = useMqttStore();
   const handleBoxClick = () => {
-    publishMessage("control/box", "Box clicked!");
+    sendMessage({ topic: "control/box", message: "Box clicked!" });
     console.log("Box clicked!");
   };
 

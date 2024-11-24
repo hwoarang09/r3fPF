@@ -1,4 +1,3 @@
-// components/DynamicMessageInput.tsx
 import React from "react";
 
 interface MessageInputProps {

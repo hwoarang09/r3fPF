@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import useMessageStore from "../store/messageStore"; // zustand 스토어 import
-import { Message } from "../types/messages"; // Message 타입 import
+import useMessageStore from "@store/messageStore";
+import { Message } from "@customTypes/messageType";
 
 interface MessageListProps {
   messages: Message[]; // Message 타입 지정

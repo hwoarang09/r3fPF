@@ -1,134 +1,75 @@
 import { create } from "zustand";
-import { subscribeWithSelector } from "zustand/middleware";
 import mqtt, { MqttClient } from "mqtt";
-import { MQTT_URL } from "../config/settings";
+
+const SUB_TOPIC = "#";
 
 interface MqttState {
   client: MqttClient | null;
-  isConnected: boolean;
-  messages: string[];
-  connectMessage: string;
-  subscribeMessage: string;
-  errorMessage: string;
-  subscribedTopics: Set<string>;
-  connect: () => void;
-  disconnect: () => void;
-  publishMessage: ({
-    topic,
-    message,
-  }: {
-    topic: string;
-    message: string;
-  }) => void;
-  subscribeToTopic: (topic: string) => void;
-  unsubscribeFromTopic: (topic: string) => void; // 구독 해제 함수
+  receivedMessages: { [topic: string]: any[] };
+  sendMessage: (params: { topic: string; message: string }) => void;
+  setReceivedMessages: (topic: string, message: any) => void;
+  initializeClient: (url: string) => void;
 }
 
-const useMqttStore = create(
-  subscribeWithSelector<MqttState>((set, get) => ({
-    client: null,
-    isConnected: false,
-    messages: [],
-    connectMessage: "",
-    subscribeMessage: "",
-    errorMessage: "",
-    subscribedTopics: new Set(),
+export const useMqttStore = create<MqttState>((set, get) => ({
+  client: null,
 
-    connect: () => {
-      const client = mqtt.connect(MQTT_URL);
+  receivedMessages: {},
 
-      client.on("connect", () => {
-        set({
-          client,
-          isConnected: true,
-          connectMessage: "Connected to MQTT Broker",
-          errorMessage: "",
-        });
-      });
+  sendMessage: ({ topic, message }) => {
+    const client = get().client;
+    console.log("sendMessage", { topic, message });
+    if (!client) {
+      console.error("MQTT client is not initialized.");
+      return;
+    }
 
-      client.on("message", (topic, message) => {
-        set((state) => ({
-          messages: [...state.messages, `${topic}: ${message.toString()}`],
-        }));
-      });
-
-      client.on("error", (error) => {
-        set({
-          errorMessage: `MQTT error: ${error.message}`,
-          connectMessage: "",
-        });
-        console.error("MQTT error:", error);
-      });
-
-      set({ client });
-    },
-
-    disconnect: () => {
-      const { client } = get();
-      if (client) {
-        client.end();
-        set({
-          client: null,
-          isConnected: false,
-          connectMessage: "Disconnected from MQTT Broker",
-        });
+    client.publish(topic, message, (err) => {
+      if (err) {
+        console.error("Failed to send message", err);
+      } else {
+        console.log(`Message sent to ${topic}: ${message}`);
       }
-    },
+    });
+  },
 
-    publishMessage: ({ topic, message }) => {
-      const { client, isConnected } = get();
-      console.log("publishing message", message, "to topic", topic);
-      if (client && isConnected) {
-        client.publish(topic, message);
-      }
-    },
+  setReceivedMessages: (topic, message) =>
+    set((state) => ({
+      receivedMessages: {
+        ...state.receivedMessages,
+        [topic]: [...(state.receivedMessages[topic] || []), message],
+      },
+    })),
 
-    subscribeToTopic: (topic) => {
-      const { client, isConnected, subscribedTopics } = get();
+  initializeClient: (url: string) => {
+    const client = mqtt.connect(url);
 
-      if (client && isConnected && !subscribedTopics.has(topic)) {
-        console.log("subscribing to topic", topic);
-        client.subscribe(topic, (err) => {
-          if (!err) {
-            set((state) => ({
-              subscribeMessage: `Subscribed to ${topic}`,
-              errorMessage: "",
-              subscribedTopics: new Set([...state.subscribedTopics, topic]),
-            }));
+    client.on("connect", () => {
+      console.log("Connected to MQTT broker");
+      if (client.connected) {
+        client.subscribe(SUB_TOPIC, (err) => {
+          if (err) {
+            console.error("Failed to subscribe to topic", err);
           } else {
-            set({ errorMessage: `Failed to subscribe to ${topic}` });
+            console.log("Subscribed to topic");
           }
         });
-      } else {
-        console.log(`Already subscribed to ${topic}`);
       }
-    },
+    });
 
-    unsubscribeFromTopic: (topic) => {
-      const { client, isConnected, subscribedTopics } = get();
-
-      if (client && isConnected && subscribedTopics.has(topic)) {
-        console.log("unsubscribing from topic", topic);
-        client.unsubscribe(topic, (err) => {
-          if (!err) {
-            set((state) => {
-              const updatedTopics = new Set(state.subscribedTopics);
-              updatedTopics.delete(topic); // 주제를 Set에서 제거
-              return {
-                subscribeMessage: `Unsubscribed from ${topic}`,
-                errorMessage: "",
-                subscribedTopics: updatedTopics,
-              };
-            });
-          } else {
-            set({ errorMessage: `Failed to unsubscribe from ${topic}` });
-          }
-        });
-      } else {
-        console.log(`Not subscribed to ${topic} or client not connected`);
+    client.on("message", (topic, message) => {
+      try {
+        const parsedMessage = JSON.parse(message.toString());
+        get().setReceivedMessages(topic, parsedMessage);
+      } catch (error) {
+        console.error("Failed to parse message", error);
       }
-    },
-  }))
-);
+    });
 
-export default useMqttStore;
+    client.on("error", (err) => {
+      console.error("MQTT Client Error:", err);
+    });
+
+    set({ client });
+  },
+}));

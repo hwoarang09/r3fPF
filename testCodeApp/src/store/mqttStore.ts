@@ -59,6 +59,7 @@ export const useMqttStore = create<MqttState>((set, get) => ({
     client.on("message", (topic, message) => {
       try {
         const parsedMessage = JSON.parse(message.toString());
+        console.log("Received message", topic, parsedMessage);
         get().setReceivedMessages(topic, parsedMessage);
       } catch (error) {
         console.error("Failed to parse message", error);

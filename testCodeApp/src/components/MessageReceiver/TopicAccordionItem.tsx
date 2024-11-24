@@ -5,7 +5,7 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import MessageList from "./MessageList";
-import { Message } from "./types";
+import { Message } from "@customTypes/messageType";
 
 interface TopicAccordionItemProps {
   topic: string;

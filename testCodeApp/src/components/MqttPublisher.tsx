@@ -9,14 +9,16 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import SelectedMessagePanel from "./SelectedMessagePanel";
-import { mqttUrl } from "../config/mqttConfig";
+import { mqttUrl } from "@config/mqttConfig";
+
 const MqttPublisher: React.FC = () => {
-  const { receivedMessages, initializeClient } = useMqttStore();
+  const { initializeClient } = useMqttStore();
 
   useEffect(() => {
     initializeClient(mqttUrl);
   }, [initializeClient]);
 
+  console.log("두번?");
   return (
     <div className="h-screen">
       <ResizablePanelGroup
@@ -30,7 +32,7 @@ const MqttPublisher: React.FC = () => {
             </ResizablePanel>
             <ResizableHandle />
             <ResizablePanel>
-              <MessageReceiver messagesByTopic={receivedMessages} />
+              <MessageReceiver />
             </ResizablePanel>
           </ResizablePanelGroup>
         </ResizablePanel>

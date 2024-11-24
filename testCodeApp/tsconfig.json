@@ -10,7 +10,8 @@
       "@/lib/*": ["src/lib/*"],
       "@store/*": ["src/store/*"],
       "@utils/*": ["src/utils/*"],
-      "@config/*": ["src/config/*"]
+      "@config/*": ["src/config/*"],
+      "@customTypes/*": ["src/customTypes/*"]
     },
     "jsx": "react-jsx", // React 17+ JSX 변환 지원
     "allowSyntheticDefaultImports": true, // ES 모듈을 기본 가져오기처럼 사용 가능

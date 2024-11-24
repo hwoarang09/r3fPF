@@ -3,20 +3,10 @@ import React, { useState } from "react";
 import TopicDropdown from "./TopicDropdown";
 import MessageInput from "./MessageInput";
 import topicList from "../../config/topicList";
+import { useMqttStore } from "../../store/mqttStore";
 
-interface SendMessageFormProps {
-  publishMessage: ({
-    topic,
-    message,
-  }: {
-    topic: string;
-    message: string;
-  }) => void;
-}
-
-const SendMessageForm: React.FC<SendMessageFormProps> = ({
-  publishMessage,
-}) => {
+const SendMessageForm = () => {
+  const { sendMessage } = useMqttStore();
   const [selectedTopic, setSelectedTopic] = useState("");
   const [messageData, setMessageData] = useState<{ [key: string]: any }>({});
 
@@ -28,8 +18,7 @@ const SendMessageForm: React.FC<SendMessageFormProps> = ({
           ...messageData,
           timestamp: new Date().toISOString(),
         });
-        console.log({ topic: selectedTopic, message: messageWithTimestamp });
-        publishMessage({ topic: selectedTopic, message: messageWithTimestamp });
+        sendMessage({ topic: selectedTopic, message: messageWithTimestamp });
       }
     }
   };
