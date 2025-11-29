@@ -1,0 +1,7 @@
+{
+  "MOVE_TO_EDGE_TOPIC": "UI/LayOut/moveToEdge",
+  "MOVE_TO_PICKUP_TOPIC": "UI/LayOut/moveToPickUp",
+  "MOVE_TO_DROPDOWN_TOPIC": "UI/LayOut/moveToDropDown",
+  "DROPDOWN_TOPIC": "UI/LayOut/dropDown",
+  "PICKUP_TOPIC": "UI/LayOut/pickUp"
+}

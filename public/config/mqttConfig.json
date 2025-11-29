@@ -1,0 +1,6 @@
+{
+  "MQTT_URL": "ws://localhost:8083",
+  "SUB_TOPIC": "#",
+  "PUB_TOPIC": "PF/UI/Tester/Command1"
+}
+
